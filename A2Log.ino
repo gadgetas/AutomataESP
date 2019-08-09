@@ -26,6 +26,7 @@
 /********************* VARIABLES GLOBALES PARA DEPURACIÓN *********************/
 /******************************************************************************/
 String logMsj;
+int verbosidadAnt;
 
 /******************************************************************************/
 /******** CONFIGURACIÓN INICIAL DE TERMINALES Y VARIABLES **********/
@@ -34,7 +35,15 @@ void A2ConfLog() {
   // Modo desarrollo: 7
   // Modo producción: 3
   Datos.verbosidad = 7;
+  verbosidadAnt=7;
   logMsj = String(F("!LOG"));
+}
+
+/******************************************************************************/
+/******************************************************************************/
+void A2LogInfo(){  
+  Serie.print(F("!VERBOSE="));
+  Serie.println(Datos.verbosidad);
 }
 
 /******************************************************************************/

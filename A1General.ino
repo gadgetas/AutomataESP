@@ -21,9 +21,8 @@ int segundos;               // Variable auxiliar para contar segundos
 /**************************************||**************************************/
 /******************************************************************************/
 void A1ConfGeneral() {
-  // Valores por defecto de los datos y variables generales  
+  // Valores por defecto de las propiedades generales  
   Datos.tiempoError = 35000;
-  Datos.verbosidad = 7;
   tiempoAnt = millis();
   tSegAnt = millis();
   tErrorAnt=millis();
@@ -35,6 +34,7 @@ void A1ConfGeneral() {
 /******************************************************************************/
 void A1Informacion() {  
   //TODO: Esperar un tiempo antes de enviar mensajes
+  Serial.println("\n");
   Serial.print(F("!Modelo:"));
   Serial.println(modelo);
   Serial.print(F("!Firmware:"));
@@ -51,7 +51,8 @@ void InfoGeneral() {
   Serie.println(F("------INFO------"));
   Serie.print(F("!EdoActual="));
   Serie.println(Estado);
-  InfoWiFi();
+  A2LogInfo();
+  M1WiFiManagerInfo();
   Serie.println(F("------INFO------"));
 }
 /**************************************||**************************************/

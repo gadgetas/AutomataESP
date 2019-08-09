@@ -13,7 +13,7 @@
 /** 19/03/06 Augusto - Agregan leds de monitoreo
 /******************************************************************************/
 const String modelo = "Atm01";
-const String firmware = "0.1.1";
+const String firmware = "0.1.100729";
 const String numSerie = "000001";
 
 // Definimos puerto serial para Comunicación
@@ -42,7 +42,6 @@ void setup() {
   /****SI ES DIFERENTE EL PUERTO DEL LOG***/
   SerialLog.begin(SerialLog_bps);
   A1Informacion();
-  Estado = estadoConfiguracion;
   CambiarEstado(estadoConfiguracion);
 }
 

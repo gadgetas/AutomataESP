@@ -77,7 +77,7 @@ void EstadoConexionWiFi() {
     Serial.print("IP:\t");
     Serial.println(WiFi.localIP());
     CambiarEstado(estadoEspera);
-*/  }
+  }*/
   if (millis() - tSegAnt > 1000) {
     segundos++;
     log(F("(WiFi)."), logDebug);

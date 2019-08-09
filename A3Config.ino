@@ -9,64 +9,49 @@
 /************ CONFIGURACIÓN REQUERIDA PARA EL HARDWARE Y VARIABLES ************/
 /******************************************************************************/
 void A3Config() {
-
-
+  log(F("(Config)Configurando"), logInfo);
+  if (!SPIFFS.begin()) {
+    log(F("(Config)Fallo en montar la unidad"), logError);
+    return;
+  }
+  if (!LeerConfig())
+    log(F("(Config)No cargo configuracion"), logError);
 }
 
-bool CargarConfiguracion() {
+/******************************************************************************/
+bool LeerConfig() {
   File configFile = SPIFFS.open("/config.json", "r");
   if (!configFile) {
-    log(F("EdoNoDeclarado"), logError);
+    log(F("(Config)Archivo no encontrado"), logError);
     return false;
   }
-
+  //Obtiene el tamaño del archivo
   size_t size = configFile.size();
-
   if (size > 1024) {
-    Serial.println("Config file size is too large");
+    log(F("(Config)Archivo muy grande"), logError);
+    configFile.close();
     return false;
   }
+
   StaticJsonDocument<1024> doc;
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, configFile);
-  if (error)
-    Serial.println(F("Failed to read file, using default configuration"));
-
-  // Copy values from the JsonDocument to the Config
-  Datos.verbosidad = doc["verbosidad"] | 7;/*
-  strlcpy(Datos.hostname,                  // <- destination
-          doc["hostname"] | "example.com",  // <- source
-          sizeof(Datos.hostname));         // <- destination's capacity
-*/
-  // Close the file (Curiously, File's destructor doesn't close the file)
-  configFile.close();
-  /*
-  // Allocate a buffer to store contents of the file.
-  std::unique_ptr<char[]> buf(new char[size]);
-
-  // We don't use String here because ArduinoJson library requires the input
-  // buffer to be mutable. If you don't use ArduinoJson, you may as well
-  // use configFile.readString instead.
-  configFile.readBytes(buf.get(), size);
-
-  StaticJsonBuffer<200> jsonBuffer;
-  JsonObject& json = jsonBuffer.parseObject(buf.get());
-
-  if (!json.success()) {
-    Serial.println("Failed to parse config file");
+  if (error) {
+    configFile.close();
+    log(F("(Config)Fallo interpretacion archivo"), logError);
     return false;
   }
 
-  const char* serverName = json["serverName"];
-  const char* accessToken = json["accessToken"];
-
-  // Real world application would store these values in some variables for
-  // later use.
-
-  Serial.print("Loaded serverName: ");
-  Serial.println(serverName);
-  Serial.print("Loaded accessToken: ");
-  Serial.println(accessToken);
-  return true;*/
+  // Copiar valores del JsonDocument a la estructura de datos
+  Datos.verbosidad = doc["verbosidad"];
+  Datos.tiempoError = doc["tiempoError"];
+  /*
+    strlcpy(Datos.hostname,                  // <- destination
+          doc["hostname"] | "example.com",  // <- source
+          sizeof(Datos.hostname));         // <- destination's capacity
+  */
+  // Cierra el archivo de configuración
+  configFile.close();
+  return true;
 }

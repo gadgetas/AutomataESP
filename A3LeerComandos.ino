@@ -45,6 +45,9 @@ void LeerComandos()
       // Gestión del LOG
       LogComando();
       break;
+    case '#':
+      // Modo Debug
+      LogDebug();
     case 'M':
       // Muestra los comandos disponibles
       MenuComandos();
