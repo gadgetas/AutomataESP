@@ -44,9 +44,9 @@ bool LeerConfig() {
   }
 
   // Copiar valores del JsonDocument a la estructura de datos
-  Datos.verbosidad = doc["verbosidad"];
+  SetVerbosidad(doc["verbosidad"]);
   Datos.tiempoError = doc["tiempoError"];
-  /*
+  /*Como copiar un string
     strlcpy(Datos.hostname,                  // <- destination
           doc["hostname"] | "example.com",  // <- source
           sizeof(Datos.hostname));         // <- destination's capacity

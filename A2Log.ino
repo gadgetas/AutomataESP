@@ -34,14 +34,14 @@ int verbosidadAnt;
 void A2ConfLog() {
   // Modo desarrollo: 7
   // Modo producción: 3
-  Datos.verbosidad = 7;
-  verbosidadAnt=7;
+  Datos.verbosidad = logDebug;
+  verbosidadAnt = logDebug;
   logMsj = String(F("!LOG"));
 }
 
 /******************************************************************************/
 /******************************************************************************/
-void A2LogInfo(){  
+void A2LogInfo() {
   Serie.print(F("!VERBOSE="));
   Serie.println(Datos.verbosidad);
 }
@@ -69,13 +69,30 @@ void LogComando()
 }
 
 /******************************************************************************/
+/**************************************||**************************************/
 /******************************************************************************/
 void SetVerbosidad(int grado) {
+  verbosidadAnt = grado;  //Auxiliar para la función LogDebug()
   Datos.verbosidad = grado;
   if (Datos.verbosidad > logDebug)
     Datos.verbosidad = logDebug;
   if (Datos.verbosidad < logEmergencia)
     Datos.verbosidad = logEmergencia;
   Serie.println(logMsj + "=" + Datos.verbosidad);
+}
+
+/******************************************************************************/
+/**************************************||**************************************/
+/******************************************************************************/
+void LogDebug() {
+  //Switchea entre los mensajes debug y el que tiene establecido
+  if (Datos.verbosidad != logDebug){
+    Datos.verbosidad = logDebug;
+    Serie.println(F("----------- MODO DEPURACION ------------"));
+    }
+  else{
+    Datos.verbosidad = verbosidadAnt;    
+    Serie.println(F("--------- FIN MODO DEPURACION ----------"));
+  }
 }
 /**************************************||**************************************/
