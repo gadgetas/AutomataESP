@@ -19,10 +19,8 @@ void CambiarEstado(int sigEstado) {
       log(F("EdoEspera"), logNoticia);
       break;
     case estadoSinEstado:    
-    default:  //Llamano un Estado que no existe 
-      log(F("EdoNoDeclarado"), logError);      
-      // Cambiamos a un estado de error
-      log(F("EdoError"), logNoticia);
+    default:  //Llamado de un Estado que no existe 
+      log(F("EdoNoDeclarado"), logError); 
       sigEstado=estadoError;
   }
   Estado = sigEstado;
@@ -54,8 +52,9 @@ void EstadoError() {
 /******************************************************************************/
 /******************************************************************************/
 void EstadoConfiguracion() {
-  A2ConfLog();
   A1ConfGeneral();
+  A2ConfLog();
+  A3Config();
   M1ConfWiFiManager();
   CambiarEstado(estadoConexionWiFi);
 }
@@ -72,13 +71,13 @@ void EstadoEspera() {
 /*****************************************************************************/
 void EstadoConexionWiFi() {
   // Si esta conectado, cambiamos de estado
-  if (wifiMulti.run() == WL_CONNECTED) {
+/* if (wifiMulti.run() == WL_CONNECTED) {
     log(F("(WiFi)Conectado a WiFi"), logNoticia);
     digitalWrite(LED_BUILTIN, HIGH);
     Serial.print("IP:\t");
     Serial.println(WiFi.localIP());
     CambiarEstado(estadoEspera);
-  }
+*/  }
   if (millis() - tSegAnt > 1000) {
     segundos++;
     log(F("(WiFi)."), logDebug);

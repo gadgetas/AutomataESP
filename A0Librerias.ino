@@ -5,8 +5,15 @@
 /** versiones de cada una ordenadas por prioridad y utilización              **/
 /******************************************************************************/
 
+/**************************************||**************************************/
+// Librería con la funcionalidad principal de manejo del WiFi
 //WiFi::https://arduino-esp8266.readthedocs.io/en/2.5.2/esp8266wifi/readme.html
 #include <ESP8266WiFi.h>        //2.5.2 - M1WiFiManager
 
+/**************************************||**************************************/
 // Codificador JSON :: https://github.com/bblanchon/ArduinoJson
 #include <ArduinoJson.h>        //6.11.3 - A1General
+/**************************************||**************************************/
+
+
+#include "FS.h"

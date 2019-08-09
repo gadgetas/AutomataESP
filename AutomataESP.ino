@@ -27,12 +27,12 @@ const String numSerie = "000001";
 /******************************************************************************/
 /*************************** DECLARACIÓN DE ESTADOS ***************************/
 /******************************************************************************/
-const int estadoSinEstado = -1;   // Estado para identificación de error
 const int estadoPrueba = -2;      // Estado usado para pruebas
 const int estadoError = -1;       // Estado principal de manejo de errores
-const int estadoConfiguracion = 0;// Estado de configuración inicial
-const int estadoConexionWiFi = 1; // Estado de conexión a un AP
-const int estadoEspera = 2;       // Estado de espera
+const int estadoSinEstado = 0;    // Usado para error en declaración de estado
+const int estadoConfiguracion = 1;// Estado de configuración inicial
+const int estadoConexionWiFi = 2; // Estado de conexión a un AP
+const int estadoEspera = 3;       // Estado de espera
 int Estado; // Variable global que contiene el estado actual
 
 /******************************************************************************/
@@ -72,4 +72,4 @@ void loop() {
       break;
   }
 }
-/*************************************||**************************************/
+/**************************************||**************************************/
