@@ -1,39 +1,43 @@
-********************************************************************************
-/* NOMBRE DEL PROYECTO
- *  
- *  En esta parte esta la descripción del programa, debemos ser concisos, 
- *  redactar un resumen general que explique el alcance y finalidad del programa
- *  
- *  Version 0.1.190729 || Esta es la versión semántica para los dos primero nú-
- *                        meros y en el último la fecha AAMMDD
- *  Placa Arduino: Arduino Pro Mini || Para que hardware se programa
- *
- *  Última revisión:   || Ultima revisión o actualización, solo la última
- *  19/03/06 Augusto - Agregan leds de monitoreo  
- */
-const String modelo="Atm01";
-const String firmware="0.1.1";
-const String numSerie="1";
+/******************************************************************************/
+/**************************** NOMBRE DEL PROYECTO *****************************/
+/******************************************************************************/
+/** Aquí redacta la descripción del programa, esta debe ser concisa, un      **/
+/** resumen general que explique el alcance y finalidad del programa         **/
+/**   Placa Hardware:      ESP8266 Generico || Para que hardware se programa **/
+/**   Versión IDE Arduino: 1.8.9            || Versión con que se desarrolla **/
+/******************************************************************************/
+/** Version 0.1.190729 || Esta es la versión actual, se usa la semántica para
+/**                       los dos primero números y en el último la fecha AAMMDD
+/**
+/** Última revisión:   || Ultima revisión o actualización, solo la última
+/** 19/03/06 Augusto - Agregan leds de monitoreo
+/******************************************************************************/
+const String modelo = "Atm01";
+const String firmware = "0.1.1";
+const String numSerie = "000001";
 
 // Definimos puerto serial para Comunicación
 #define Serie Serial
-#define SerialLog_bps 9600
+#define SerialLog_bps 115200
 
 // Definimos puerto serial para LOG
 #define SerialLog Serial
-#define SerialLog_bps 9600
+#define SerialLog_bps 115200
 
-// Definición de estados
-const int estadoPrueba=-3;        // Estado usado para pruebas
-const int estadoError=-2;         // Estado usado para pruebas
-const int estadoDesconectado = -1;// Estado de puerto serial desconectad
-// Modulo Alcancia
-const int estadoConfiguracion = 0;// Estado Abriendo el mecanismo
-const int estadoConexionWiFi = 1; // Estado inicial
-const int estadoEspera = 2;       // Estado Cerrando el mecanismo
+/******************************************************************************/
+/*************************** DECLARACIÓN DE ESTADOS ***************************/
+/******************************************************************************/
+const int estadoSinEstado = -1;   // Estado para identificación de error
+const int estadoPrueba = -2;      // Estado usado para pruebas
+const int estadoError = -1;       // Estado principal de manejo de errores
+const int estadoConfiguracion = 0;// Estado de configuración inicial
+const int estadoConexionWiFi = 1; // Estado de conexión a un AP
+const int estadoEspera = 2;       // Estado de espera
+int Estado; // Variable global que contiene el estado actual
 
-int Estado;
-
+/******************************************************************************/
+/*************************** INICIALIZACIÓN GENERAL ***************************/
+/******************************************************************************/
 void setup() {
   /****SI ES DIFERENTE EL PUERTO DEL LOG***/
   SerialLog.begin(SerialLog_bps);
@@ -42,17 +46,17 @@ void setup() {
   CambiarEstado(estadoConfiguracion);
 }
 
+/******************************************************************************/
+/*************** ESTRUCTURA PRINCIPAL DE LA MÁQUINA DE ESTADOS ****************/
+/******************************************************************************/
 void loop() {
-  LeerIndicaciones();  
+  LeerIndicaciones();
   switch (Estado) {
     case estadoPrueba:
       EstadoPrueba();
       break;
     case estadoError:
       EstadoError();
-      break;
-    case estadoDesconectado:
-      EstadoDesconectado();
       break;
     case estadoConfiguracion:
       EstadoConfiguracion();
@@ -64,8 +68,8 @@ void loop() {
       EstadoEspera();
       break;
     default:
-      // if nothing else matches, do the default
-      // default is optional
+      CambiarEstado(estadoSinEstado);
       break;
   }
 }
+/*************************************||**************************************/

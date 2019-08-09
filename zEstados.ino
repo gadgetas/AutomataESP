@@ -1,6 +1,6 @@
-/*****************************************************************************/
-/************** FUNCIÓN PARA CAMBIAR DE ESTADO Y MOSTRAR MSJS ****************/
-/*****************************************************************************/
+/******************************************************************************/
+/************** FUNCIÓN PARA CAMBIAR DE ESTADO Y MOSTRAR MSJS *****************/
+/******************************************************************************/
 void CambiarEstado(int sigEstado) {
   switch (sigEstado) {
     case estadoPrueba:
@@ -9,25 +9,21 @@ void CambiarEstado(int sigEstado) {
     case estadoError:
       log(F("EdoError"), logNoticia);
       break;
-    case estadoDesconectado:
-      log(F("EdoDesconectado"), logNoticia);
-      break;
     case estadoConfiguracion:
       log(F("EdoConfiguracion"), logNoticia);
       break;
     case estadoConexionWiFi:
       log(F("EdoConexionWiFi"), logNoticia);
-      log("(WiFi)Conectando a la red WiFi SF", logDebug);
-      // Iniciamos un contador de segundos
-      tSegAnt = millis();
-      segundos = 0;
       break;
     case estadoEspera:
       log(F("EdoEspera"), logNoticia);
       break;
-    default:
-      log(F("Estado no valido"), logError);
-      break;
+    case estadoSinEstado:    
+    default:  //Llamano un Estado que no existe 
+      log(F("EdoNoDeclarado"), logError);      
+      // Cambiamos a un estado de error
+      log(F("EdoError"), logNoticia);
+      sigEstado=estadoError;
   }
   Estado = sigEstado;
 }
@@ -36,7 +32,7 @@ void CambiarEstado(int sigEstado) {
 /*****************************************************************************/
 /*****************************************************************************/
 void EstadoPrueba() {
-  // Esperar 5 segundos mostrando la pantalla de inicio
+  // Espera 5 segundos
   if (millis() - tiempoAnt > 5000) {
     tiempoAnt = millis();
     CambiarEstado(estadoEspera);
@@ -47,35 +43,20 @@ void EstadoPrueba() {
 /*****************************************************************************/
 /*****************************************************************************/
 void EstadoError() {
-  // Si ya ha pasado 2 segundo, apaga el buzzer
-  if (millis() - tiempoAnt > 2000) {
-    //buzzer(false);
-  }
-  // Esperar 5 segundos mostrando la pantalla de inicio
+  // Esperar 5 segundos
   if (millis() - tiempoAnt > 4500) {
     tiempoAnt = millis();
     CambiarEstado(estadoError);
   }
 }
 
-/*****************************************************************************/
-/*****************************************************************************/
-/*****************************************************************************/
-void EstadoDesconectado() {
-  // Esperar 5 segundos mostrando la pantalla de inicio
-  if (millis() - tiempoAnt > 5000) {
-    tiempoAnt = millis();
-    CambiarEstado(estadoEspera);
-  }
-}
-
-/*****************************************************************************/
-/*****************************************************************************/
-/*****************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
 void EstadoConfiguracion() {
   A2ConfLog();
   A1ConfGeneral();
-  ConfWiFi();
+  M1ConfWiFiManager();
   CambiarEstado(estadoConexionWiFi);
 }
 
@@ -92,7 +73,7 @@ void EstadoEspera() {
 void EstadoConexionWiFi() {
   // Si esta conectado, cambiamos de estado
   if (wifiMulti.run() == WL_CONNECTED) {
-    log(F("(WiFi)Conectado a WiFi"), logNoticia);    
+    log(F("(WiFi)Conectado a WiFi"), logNoticia);
     digitalWrite(LED_BUILTIN, HIGH);
     Serial.print("IP:\t");
     Serial.println(WiFi.localIP());
@@ -102,8 +83,8 @@ void EstadoConexionWiFi() {
     segundos++;
     log(F("(WiFi)."), logDebug);
     tSegAnt = millis();
-    digitalWrite(LED_BUILTIN, HIGH); 
-    delay(20);   
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(20);
     digitalWrite(LED_BUILTIN, LOW);
   }
 }
