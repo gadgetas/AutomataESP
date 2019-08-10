@@ -4,7 +4,7 @@
 void MenuComandos() {
   Serie.println(F("----------- MENU DE COMANDOS -----------"));
   Serie.println(F("X:(Modulo): Comando a ejecutar"));
-  if (Datos.verbosidad == 7)
+  if (Datos.verbosidad == logDebug)
     MenuComandosDesarrollo();
 }
 
@@ -12,7 +12,7 @@ void MenuComandos() {
 /**************************************||**************************************/
 /******************************************************************************/
 void MenuComandosDesarrollo() {
-  Serie.println(F("L:(LOG)Establece verbosidad"));
+  Serie.println(F("Ln:(LOG) Establece verbosidad"));
   Serie.println(F("I:(AYUDA)Obtiene ayuda del comando"));
 }
 

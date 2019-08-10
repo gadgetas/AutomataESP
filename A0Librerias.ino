@@ -15,5 +15,9 @@
 #include <ArduinoJson.h>        //6.11.3 - A1General
 /**************************************||**************************************/
 
-
-#include "FS.h"
+/***************************** Sistema de Archivos ****************************/
+// Librería nativa SPIFFS para el manejo de archivos de la memoria flash
+// *Importante checar sus limitaciones
+// https://arduino-esp8266.readthedocs.io/en/2.5.2/filesystem.html
+#include "FS.h"                 //2.5.2 - A3Config
+/**************************************||**************************************/

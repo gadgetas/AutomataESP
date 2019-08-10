@@ -49,6 +49,10 @@ void LeerComandos()
       // Modo Debug
       LogDebug();
       break;
+    case 'S':
+      // Guardamos la Configuración
+      guardarConfig();
+      break;
     case 'M':
       // Muestra los comandos disponibles
       MenuComandos();

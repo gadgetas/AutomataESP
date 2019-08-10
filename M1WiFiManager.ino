@@ -18,11 +18,11 @@ const char* ssid     = "Simple3";  // El nombre del red SSID
 const char* password = "#password2000#";     // Clave de la red WiFi
 
 /******************************************************************************/
-/******** CONFIGURACIÓN INICIAL DE TERMINALES Y VARIABLES **********/
+/*************** CONFIGURACIÓN INICIAL DE TERMINALES Y VARIABLES **************/
 /******************************************************************************/
 void M1ConfWiFiManager() {
   // Configuramos los datos de nuestra red WiFi
-  log(F("(WiFi)Configurando"), logNoticia);
+  log(F("(WiFi)Configurando"), logInfo);
   WiFi.mode(WIFI_STA);
   // Led indicador de conexión
   pinMode(LED_BUILTIN, OUTPUT);
