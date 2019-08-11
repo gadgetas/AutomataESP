@@ -12,7 +12,7 @@
 /** Última revisión:   || Ultima revisión o actualización, solo la última
 /** 19/03/06 Augusto - Agregan leds de monitoreo
 /******************************************************************************/
-const String modelo = "Atm01";
+const String modelo = "GLBOX";
 const String firmware = "0.1.100729";
 const String numSerie = "000001";
 

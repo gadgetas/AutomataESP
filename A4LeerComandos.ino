@@ -48,6 +48,7 @@ void LeerComandos()
     case '#':
       // Modo Debug
       LogDebug();
+      M1ModoDebug();
       break;
     case 'S':
       // Guardamos la Configuración
