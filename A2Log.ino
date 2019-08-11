@@ -82,7 +82,7 @@ void SetVerbosidad(int grado) {
 }
 
 /******************************************************************************/
-/************************* CAMBIO RÁPIDO A MODO DEBUG *************************/
+/******************** CAMBIO RÁPIDO Y TEMPORAL A MODO DEBUG *******************/
 /******************************************************************************/
 void LogDebug() {
   //Switchea entre los mensajes debug y el que tiene establecido

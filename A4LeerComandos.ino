@@ -53,6 +53,10 @@ void LeerComandos()
       // Guardamos la Configuración
       guardarConfig();
       break;
+    case '*':
+      // Borrar redes guardadas
+      M1ResetWiFiManager();
+      break;
     case 'M':
       // Muestra los comandos disponibles
       MenuComandos();

@@ -41,6 +41,14 @@ void A1Informacion() {
   Serial.println(firmware);
   Serial.print(F("!Serie:"));
   Serial.println(numSerie);
+  Serial.print(F("!ChipId:"));
+  Serial.println(ESP.getChipId());
+  Serial.print(F("!CoreVersion:"));
+  Serial.println(ESP.getCoreVersion());
+  Serial.print(F("!CpuFreqMHz:"));
+  Serial.println(ESP.getCpuFreqMHz());
+  Serial.print(F("!SketchSize:"));
+  Serial.println(ESP.getSketchSize());
 }
 
 /******************************************************************************/
@@ -49,6 +57,7 @@ void A1Informacion() {
 // Envia la información de los datos del autómata
 void InfoGeneral() {
   Serie.println(F("------INFO------"));
+  A1Informacion();
   Serie.print(F("!EdoActual="));
   Serie.println(Estado);
   A2LogInfo();

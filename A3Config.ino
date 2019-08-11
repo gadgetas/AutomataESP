@@ -18,6 +18,9 @@ void A3Config() {
     CambiarEstado(estadoError);
     return;
   }
+  else
+    log(F("(Config)Memoria flash montada"), logNoticia);
+  
   if (!LeerConfig())
     log(F("(Config)No cargo configuracion"), logError);
 }

@@ -12,8 +12,9 @@ void MenuComandos() {
 /**************************************||**************************************/
 /******************************************************************************/
 void MenuComandosDesarrollo() {
-  Serie.println(F("Ln:(LOG) Establece verbosidad"));
   Serie.println(F("I:(AYUDA)Obtiene ayuda del comando"));
+  Serie.println(F("Ln:(LOG) Establece verbosidad"));
+  Serie.println(F("*:(WiFiManager) Borra red guardada"));
 }
 
 /******************************************************************************/
