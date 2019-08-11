@@ -36,7 +36,7 @@ void M1ConfWiFiManager() {
   pinMode(LED_BUILTIN, OUTPUT);
 
   // Ejecuta esta funcion cuando falló la conexión y levanta el Access Point
-  //wm.setAPCallback(M1ModoConfiguracion);
+  wm.setAPCallback(M1ModoConfiguracion);
   // Ejecuta esta función cuando se ha configurado y conectado a una red WiFi
   wm.setSaveConfigCallback(M1ConfiguracionExitosa);
   // wm.setConfigPortalTimeout(30); // auto close configportal after n seconds
@@ -61,7 +61,9 @@ void M1WiFiManagerInfo() {
   Serie.print(F("!IP="));
   Serie.println(WiFi.localIP());
   Serie.print(F("!SubNetMask="));
-  Serie.println(WiFi.subnetMask());  
+  Serie.println(WiFi.subnetMask()); 
+  Serie.print(F("!MAC="));
+  Serie.println(WiFi.macAddress()); 
   Serie.printf("!StatusWiFi: %d\n", WiFi.status());
   if (Datos.verbosidad >= logDebug) {
     // Imprime información de debug
@@ -81,22 +83,17 @@ void M1ResetWiFiManager(){
 /**************************************||**************************************/
 /******************************************************************************/
 void M1ConfiguracionExitosa(){
-  log(F("(WiFiManager)Configuracion exitosa"), logNoticia); 
+  log(F("(WiFiManager)Configuracion exitosa"), logNoticia ); 
+  Serie.println(WiFi.psk());
+  Serie.println(WiFi.SSID());
 }
 
 /******************************************************************************/
 /**************************************||**************************************/
 /******************************************************************************/
-/*void M1ModoConfiguracion(WiFiManager *myWiFiManager) {
-  //log(F("(WiFiManager)Modo de configuracion"), logNoticia);
-  //Serie.println(WiFi.softAPIP());
-  //if you used auto generated SSID, print it
-  //Serial.println(myWiFiManager->getConfigPortalSSID());
-}*/
-
-void configModeCallback (WiFiManager *myWiFiManager) {
-  Serial.println("Entered config mode");
-  Serial.println(WiFi.softAPIP());
+void M1ModoConfiguracion(WiFiManager *myWiFiManager) {
+  log(F("(WiFiManager)Modo de configuracion"), logNoticia);
+  Serie.println(WiFi.softAPIP());
   //if you used auto generated SSID, print it
   Serial.println(myWiFiManager->getConfigPortalSSID());
 }

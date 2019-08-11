@@ -34,7 +34,7 @@ void A1ConfGeneral() {
 /******************************************************************************/
 void A1Informacion() {  
   //TODO: Esperar un tiempo antes de enviar mensajes
-  Serial.println("\n");
+  Serial.println("");
   Serial.print(F("!Modelo:"));
   Serial.println(modelo);
   Serial.print(F("!Firmware:"));

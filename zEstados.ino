@@ -18,10 +18,10 @@ void CambiarEstado(int sigEstado) {
     case estadoEspera:
       log(F("EdoEspera"), logNoticia);
       break;
-    case estadoSinEstado:    
-    default:  //Llamado de un Estado que no existe 
-      log(F("EdoNoDeclarado"), logError); 
-      sigEstado=estadoError;
+    case estadoSinEstado:
+    default:  //Llamado de un Estado que no existe
+      log(F("EdoNoDeclarado"), logError);
+      sigEstado = estadoError;
   }
   Estado = sigEstado;
 }
@@ -62,28 +62,33 @@ void EstadoConfiguracion() {
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
-void EstadoEspera() {
-  // En este estado espera los comandos del Arduino
+void EstadoEspera() {  
+  if (millis() - tSegAnt > 5000) {
+    segundos++;
+    log(F("(EdoEspera)."), logNoticia);
+    tSegAnt = millis();
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(200);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(200);
+  }
 }
 
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
 void EstadoConexionWiFi() {
-  // Si esta conectado, cambiamos de estado
-/* if (wifiMulti.run() == WL_CONNECTED) {
-    log(F("(WiFi)Conectado a WiFi"), logNoticia);
-    digitalWrite(LED_BUILTIN, HIGH);
-    Serial.print("IP:\t");
-    Serial.println(WiFi.localIP());
-    CambiarEstado(estadoEspera);
-  }*/
-  if (millis() - tSegAnt > 1000) {
-    segundos++;
-    log(F("(WiFi)."), logDebug);
-    tSegAnt = millis();
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(20);
-    digitalWrite(LED_BUILTIN, LOW);
+  // Si no esta conectado
+  if (WiFi.status() != WL_CONNECTED) {
+    //Iniciamos la conexion con WiFiManager
+    if (!wm.autoConnect()) {
+      // Si no se conecto
+      log(F("(EdoConexionWiFi)Se reinicia para intentar de nuevo"), logError);
+      //Resetea y se intenta de nuevo
+      ESP.reset();
+      delay(1000);
+    }
   }
+  // Si llegó aquí es esta conectado, cambiamos de estado
+  CambiarEstado(estadoEspera);
 }
