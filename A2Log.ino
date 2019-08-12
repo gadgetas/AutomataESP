@@ -55,6 +55,19 @@ void log(String msj, int grado) {
   SerialLog.println(logMsj + grado + "-" + msj);
 }
 
+void log(String msj, String valor, int grado) {
+  if (grado > Datos.verbosidad)
+    return;
+  SerialLog.println(logMsj + grado + "-" + msj + valor);
+}
+
+void log(String msj, int valor, int grado) {
+  if (grado > Datos.verbosidad)
+    return;
+  SerialLog.print(logMsj + grado + "-" + msj);
+  SerialLog.println(valor);
+}
+
 
 /******************************************************************************/
 /******************* Define el grado de verbosidad en el log ******************/
@@ -86,12 +99,12 @@ void SetVerbosidad(int grado) {
 /******************************************************************************/
 void LogDebug() {
   //Switchea entre los mensajes debug y el que tiene establecido
-  if (Datos.verbosidad != logDebug){
+  if (Datos.verbosidad != logDebug) {
     Datos.verbosidad = logDebug;
     Serie.println(F("----------- MODO DEPURACION ------------"));
-    }
-  else{
-    Datos.verbosidad = verbosidadAnt;    
+  }
+  else {
+    Datos.verbosidad = verbosidadAnt;
     Serie.println(F("--------- FIN MODO DEPURACION ----------"));
   }
 }

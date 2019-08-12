@@ -53,6 +53,7 @@ boolean M2ConfmDNS() {
   }
   else {
     log(F("(mDNS-SD)Dominio local asignado"), logError);
+    Serial.println(dominio);
   }
   // Announce esp tcp service on port 8080
   MDNS.addService("Gld-device", "tcp", 8080);
