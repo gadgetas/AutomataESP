@@ -91,9 +91,8 @@ void LeerInformacion() {
     case 'M':
       MenuInformacion();
       break;
-    case '#':
-      // Modo debug
-      SetVerbosidad(logDebug);
+    case 'w':
+      M1WiFiManagerInfo();
       break;
     case '\n':
     case '\r':

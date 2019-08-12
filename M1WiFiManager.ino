@@ -59,6 +59,8 @@ void M1ConfWiFiManager() {
 /******************************************************************************/
 void M1WiFiManagerInfo() {
   Serie.println(F("------WIFIMANAGER INFO------"));
+  Serie.print(F("!SSID="));
+  Serie.println(WiFi.SSID());
   Serie.print(F("!IP="));
   Serie.println(WiFi.localIP());
   Serie.print(F("!SubNetMask="));

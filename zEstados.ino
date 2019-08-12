@@ -62,15 +62,16 @@ void EstadoConfiguracion() {
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
-void EstadoEspera() {  
+void EstadoEspera() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(200);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(200);
+  
   if (millis() - tSegAnt > 5000) {
     segundos++;
     log(F("(EdoEspera)."), logInfo);
     tSegAnt = millis();
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(200);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(200);
   }
 }
 
@@ -80,10 +81,10 @@ void EstadoEspera() {
 void EstadoConexionWiFi() {
   // Si no esta conectado
   if (WiFi.status() != WL_CONNECTED) {
-     String ssid = modelo + String(ESP.getChipId());
-    // Iniciamos la conexion con WiFiManager, función bloqueante, Si no hay 
+    String ssid = modelo + String(ESP.getChipId());
+    // Iniciamos la conexion con WiFiManager, función bloqueante, Si no hay
     // nadie conectado y pasan 3 min se sale del portal de configuración
-    if (!wm.autoConnect(ssid.c_str(),passwordAP.c_str())) {
+    if (!wm.autoConnect(ssid.c_str(), passwordAP.c_str())) {
       // Si no se conecto
       log(F("(EdoConexionWiFi)Se reinicia para intentar de nuevo"), logError);
       //Resetea y se intenta de nuevo
