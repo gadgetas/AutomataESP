@@ -29,12 +29,16 @@ const String numSerie = "000001";
 /**************************************||**************************************/
 // Codificador JSON :: https://github.com/bblanchon/ArduinoJson
 #include <ArduinoJson.h>        //6.11.3 - A1General
-/**************************************||**************************************/
 /***************************** Sistema de Archivos ****************************/
 // Librería nativa SPIFFS para el manejo de archivos de la memoria flash
 // *Importante checar sus limitaciones
 // https://arduino-esp8266.readthedocs.io/en/2.5.2/filesystem.html
 #include "FS.h"                 //2.5.2 - A3Config
+/**************************************||**************************************/
+// Librería nativa que permite asignar un dominio local al ESP sin necesidad de 
+// servidor DNS, usa el protocolo mDNS. Responde a consultas de descubrimiento
+// de servicios.
+#include <ESP8266mDNS.h>        //2.5.2 - A5mDNS-SD
 /**************************************||**************************************/
 
 // Definimos puerto serial para Comunicación
@@ -53,7 +57,8 @@ const int estadoError = -1;       // Estado principal de manejo de errores
 const int estadoSinEstado = 0;    // Usado para error en declaración de estado
 const int estadoConfiguracion = 1;// Estado de configuración inicial
 const int estadoConexionWiFi = 2; // Estado de conexión a un AP
-const int estadoEspera = 3;       // Estado de espera
+const int estadoConfigMDns = 3;   // Configuracion resolucion de nombres local
+const int estadoEspera = 4;       // Estado de espera
 int Estado; // Variable global que contiene el estado actual
 
 /******************************************************************************/
@@ -83,6 +88,9 @@ void loop() {
       break;
     case estadoConexionWiFi:
       EstadoConexionWiFi();
+      break;
+    case estadoConfigMDns:
+      EstadoConfigMDns();
       break;
     case estadoEspera:
       EstadoEspera();

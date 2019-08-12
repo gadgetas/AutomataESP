@@ -15,6 +15,9 @@ void CambiarEstado(int sigEstado) {
     case estadoConexionWiFi:
       log(F("EdoConexionWiFi"), logNoticia);
       break;
+    case estadoConfigMDns:
+      log(F("EstadoConfigMDns"), logNoticia);
+      break;
     case estadoEspera:
       log(F("EdoEspera"), logNoticia);
       break;
@@ -67,7 +70,7 @@ void EstadoEspera() {
   delay(200);
   digitalWrite(LED_BUILTIN, LOW);
   delay(200);
-  
+
   if (millis() - tSegAnt > 5000) {
     segundos++;
     log(F("(EdoEspera)."), logInfo);
@@ -93,5 +96,14 @@ void EstadoConexionWiFi() {
     }
   }
   // Si llegó aquí ya esta conectado, cambiamos de estado
-  CambiarEstado(estadoEspera);
+  CambiarEstado(estadoConfigMDns);
+}
+
+
+void EstadoConfigMDns() {
+  // Si se configura correctamente pasa al siguiente estado
+  if (M2ConfmDNS())
+    CambiarEstado(estadoEspera);
+  else
+    CambiarEstado(estadoError);
 }
