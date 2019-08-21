@@ -57,8 +57,10 @@ void EstadoError() {
 void EstadoConfiguracion() {
   A1ConfGeneral();
   A2ConfLog();
-  A3Config();
   M1ConfWiFiManager();
+  M2ConfmDNS();
+  // Al último carga la configuración guardada de todos los módulos
+  A3Config();
   CambiarEstado(estadoConexionWiFi);
 }
 
@@ -102,7 +104,7 @@ void EstadoConexionWiFi() {
 
 void EstadoConfigMDns() {
   // Si se configura correctamente pasa al siguiente estado
-  if (M2ConfmDNS())
+  if (M2StartmDNS())
     CambiarEstado(estadoEspera);
   else
     CambiarEstado(estadoError);

@@ -44,14 +44,6 @@ void M1ConfWiFiManager() {
   wm.setSaveConfigCallback(M1ConfiguracionExitosa);
   // Si no hay nadie conectado y pasan 3 min se sale del portal de configuración
   wm.setConfigPortalTimeout(180);
-
-  // wifi scan settings
-  // wm.setRemoveDuplicateAPs(false); // do not remove duplicate ap names (true)
-  // wm.setMinimumSignalQuality(20);  // set min RSSI (percentage) to show in scans, null = 8%
-  // wm.setShowInfoErase(false);      // do not show erase button on info page
-  // wm.setScanDispPerc(true);       // show RSSI as percentage not graph icons
-
-  // wm.setBreakAfterConfig(true);   // always exit configportal even if wifi save fails
 }
 
 /******************************************************************************/

@@ -54,6 +54,10 @@ void LeerComandos()
       // Guardamos la Configuración
       guardarConfig();
       break;
+    case 'd':
+      // Modo Debug
+      M2mDnsComando();
+      break;
     case '*':
       // Borrar redes guardadas
       M1ResetWiFiManager();

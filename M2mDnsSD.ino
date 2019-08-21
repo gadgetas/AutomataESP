@@ -35,27 +35,78 @@
 /******************************************************************************/
 /*********************** CONFIGURACIÓN INICIAL DEL MÓDULO *********************/
 /******************************************************************************/
-boolean M2ConfmDNS() {
-  // Configuramos los datos de nuestra red WiFi
+void M2ConfmDNS() {
+  // Configuramos los datos del servicio de descubrimiento mDNS
   log(F("(mDNS-SD)Configurando"), logInfo);
+  // Creamos el dominio por defecto, este lo va a sobreescribir el modulo de
+  // de configuración si existe en el archivo config.json
+  String dominio = modelo + ESP.getChipId();
+  dominio.toLowerCase();
+  // Establece el nombre del dominio
+  strlcpy(Datos.dominio, dominio.c_str(), 64);
+  // Nombre del servicio ofrecido
+
+  // Puerto donde se ofrece el servicio
+
+}
+
+/******************************************************************************/
+/*************************** INICIAR EL SERVICIO MDNS *************************/
+/******************************************************************************/
+boolean M2StartmDNS() {
+  // Configuramos los datos de nuestra red WiFi
+  log(F("(mDNS-SD)Iniciando..."), logInfo);
   // Debe ser ejecutada despues de que haya conectado a una red.
   if (WiFi.status() != WL_CONNECTED) {
     log(F("(mDNS-SD)Debe estar conectado a una red WiFi"), logError);
     return false;
   }
-  // Establece el nombre del dominio
-  // String dominio = modelo + String(ESP.getChipId());
-  char dominio[16] = {0};
-  sprintf(dominio, "ESP_%06X", ESP.getChipId());
-  if (!MDNS.begin(dominio)) {
+  // Inicializa el servicio con el dominio guardado en datos
+  if (!MDNS.begin(Datos.dominio)) {
     log(F("(mDNS-SD)Fallo al iniciar mDNS responder"), logError);
     return false;
   }
   else {
-    log(F("(mDNS-SD)Dominio local asignado"), logError);
-    Serial.println(dominio);
+    log(F("(mDNS-SD)Dominio local asignado "), Datos.dominio, logNoticia);
   }
   // Announce esp tcp service on port 8080
-  MDNS.addService("Gld-device", "tcp", 8080);
+  MDNS.addService("Gld-Unadin", "tcp", 3000);
   return true;
+}
+
+/******************************************************************************/
+/**************************************||**************************************/
+/******************************************************************************/
+void M2mDNSInfo() {
+  Serie.println(F("------mDNS DISCOVERY SERVICE------"));
+  Serie.print(F("!Domain="));
+  Serie.print(Datos.dominio);
+  Serie.println(".local");
+}
+
+/******************************************************************************/
+/**************************************||**************************************/
+/******************************************************************************/
+void M2mDnsComando(){  
+  String nvoDominio = Serial.readStringUntil('\n');
+  M2mDnsDominio(nvoDominio);
+}
+
+/******************************************************************************/
+/**************************************||**************************************/
+/******************************************************************************/
+void M2mDnsDominio(String nuevoDominio) {
+  // Verifica si tiene menos de 64 caracteres
+  if (nuevoDominio.length() <= sizeof(Datos.dominio)) {
+    /*Como copiar un string*/
+    strlcpy(Datos.dominio,                  // <- destination
+            nuevoDominio.c_str(),  // <- source
+            sizeof(Datos.dominio));         // <- destination's capacity
+    Serie.print(F("!Domain="));
+    Serie.print(Datos.dominio);
+    Serie.println(".local");
+    log(F("(mDNS-SD)Salva y reinicia para aplicar cambios"), logAdvertencia);
+  } else {
+    log(F("(mDNS-SD)Dominio mayor a 64 caracteres"), logError);
+  }
 }
