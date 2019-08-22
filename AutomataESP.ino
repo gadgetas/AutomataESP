@@ -74,7 +74,8 @@ void setup() {
 /******************************************************************************/
 /*************** ESTRUCTURA PRINCIPAL DE LA MÁQUINA DE ESTADOS ****************/
 /******************************************************************************/
-void loop() {
+void loop() {  
+  MDNS.update();
   LeerIndicaciones();
   switch (Estado) {
     case estadoPrueba:

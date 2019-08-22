@@ -4,6 +4,7 @@
 void MenuComandos() {
   Serie.println(F("----------- MENU DE COMANDOS -----------"));
   Serie.println(F("X:(Modulo): Comando a ejecutar"));
+  Serie.println(F("S:(Config): Salva los cambios en config.json"));
   if (Datos.verbosidad == logDebug)
     MenuComandosDesarrollo();
 }

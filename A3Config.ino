@@ -20,7 +20,7 @@ void A3Config() {
   }
   else
     log(F("(Config)Memoria flash montada"), logNoticia);
-  
+
   if (!LeerConfig())
     log(F("(Config)No cargo configuracion"), logError);
 }
@@ -53,11 +53,11 @@ bool LeerConfig() {
   // Copiar valores del JsonDocument a la estructura de datos
   SetVerbosidad(doc["verbosidad"]);
   Datos.tiempoError = doc["tiempoError"];
-  /*Como copiar un string
-    strlcpy(Datos.hostname,                  // <- destination
-          doc["hostname"] | "example.com",  // <- source
-          sizeof(Datos.hostname));         // <- destination's capacity
-  */
+  // Obteniendo el dominio
+  /*Como copiar un string*/
+  strlcpy(Datos.dominio,                  // <- destination
+          doc["dominio"] | Datos.dominio,  // <- source
+          sizeof(Datos.dominio));         // <- destination's capacity
   // Cierra el archivo de configuración
   configFile.close();
   return true;
@@ -83,7 +83,8 @@ void guardarConfig() {
   // Actualizar la capacidad de la instancia, para más valores
   // 39 bytes al momento
   doc["verbosidad"] = Datos.verbosidad;
-  doc["tiempoError"] = Datos.tiempoError ;
+  doc["tiempoError"] = Datos.tiempoError;
+  doc["dominio"] = Datos.dominio;
 
   // Serializamos JSON al Archivo
   if (serializeJson(doc, configFile) == 0) {

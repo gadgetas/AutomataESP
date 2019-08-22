@@ -3,9 +3,11 @@
 /******************************************************************************/
 struct DatosAutomataESP {
   //******************** Variables de propiedades generales *******************/
-  unsigned long tiempoError;    //
+  unsigned long tiempoError;  //
   //********************************** A2Log **********************************/
-  int verbosidad;               // Nivel de verbosidad
+  int verbosidad;             // Nivel de verbosidad  
+  //********************************* M2mDNS **********************************/
+  char dominio[64];           // Nombre del host, el dominio superior es local
 };
 
 /******************************************************************************/
@@ -62,6 +64,7 @@ void InfoGeneral() {
   Serie.println(Estado);
   A2LogInfo();
   M1WiFiManagerInfo();
+  M2mDNSInfo();
   Serie.println(F("------INFO------"));
 }
 /**************************************||**************************************/
