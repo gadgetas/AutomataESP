@@ -71,6 +71,7 @@ boolean M2StartmDNS() {
   }
   // Announce esp tcp service on port 8080
   MDNS.addService("Gld-Unadin", "tcp", 3000);
+  MDNS.addService("http", "tcp", 80);
   return true;
 }
 
@@ -87,20 +88,20 @@ void M2mDNSInfo() {
 /******************************************************************************/
 /**************************************||**************************************/
 /******************************************************************************/
-void M2mDnsComando(){  
+void M2mDnsComando() {
   String nvoDominio = Serial.readStringUntil('\n');
   M2mDnsDominio(nvoDominio);
 }
 
 /******************************************************************************/
-/**************************************||**************************************/
+/************* ESTABLECE EL NOMBRE DEL HOST PARA EL DOMINIO LOCAL *************/
 /******************************************************************************/
 void M2mDnsDominio(String nuevoDominio) {
   // Verifica si tiene menos de 64 caracteres
   if (nuevoDominio.length() <= sizeof(Datos.dominio)) {
     /*Como copiar un string*/
     strlcpy(Datos.dominio,                  // <- destination
-            nuevoDominio.c_str(),  // <- source
+            nuevoDominio.c_str(),           // <- source
             sizeof(Datos.dominio));         // <- destination's capacity
     Serie.print(F("!Domain="));
     Serie.print(Datos.dominio);
@@ -108,5 +109,23 @@ void M2mDnsDominio(String nuevoDominio) {
     log(F("(mDNS-SD)Salva y reinicia para aplicar cambios"), logAdvertencia);
   } else {
     log(F("(mDNS-SD)Dominio mayor a 64 caracteres"), logError);
+  }
+}
+
+/******************************************************************************/
+/********** DEVUELVE EL DOMINIO DEL PRIMER HOST DEL SERVICIO BUSCADO **********/
+/******************************************************************************/
+String M2mDnsIpServidor(String nombre, String tipo) {
+  log(F("(mDNS-SD)Buscando servicios: "), nombre, logNoticia);
+  int n = MDNS.queryService(nombre, tipo);
+  if (n == 0) {
+    log(F("(mDNS-SD)No se encuentran servicios "), nombre, logError);
+    return "127.0.0.1";
+  } else {
+    if (n > 1)
+      log(F("(mDNS-SD)Servicios encontrados: "), n, logInfo);
+
+    log(F("(mDNS-SD)Dominio encontrado "), MDNS.hostname(0), logNoticia);
+    return MDNS.hostname(0);
   }
 }

@@ -3,7 +3,9 @@
 /******************************************************************************/
 struct DatosAutomataESP {
   //******************** Variables de propiedades generales *******************/
-  unsigned long tiempoError;  //
+  unsigned long tiempoError;  //  
+  char IpServerTo[64];        // IP del servidor al que se conecta
+  char DomainServerTo[64];    // Nombre de dominio del servidor que se conecta
   //********************************** A2Log **********************************/
   int verbosidad;             // Nivel de verbosidad  
   //********************************* M2mDNS **********************************/

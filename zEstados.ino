@@ -34,9 +34,19 @@ void CambiarEstado(int sigEstado) {
 /*****************************************************************************/
 void EstadoPrueba() {
   // Espera 5 segundos
-  if (millis() - tiempoAnt > 5000) {
+  if (millis() - tiempoAnt > 10000) {
     tiempoAnt = millis();
-    CambiarEstado(estadoEspera);
+    M2mDnsIpServidor("Gld-Unicon", "tcp");
+    //Serie.println(WiFi.hostByName("AugusGamer.local"));
+    IPAddress ip;
+    if (!WiFi.hostByName("AugusGamer.local", ip)) { // Get the IP address of the NTP server
+      Serial.println("DNS lookup failed. Rebooting.");
+    }
+    else {
+      String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
+      Serial.print("IP resuelta por hostByName ");
+      Serie.println(ipStr);
+    }
   }
 }
 
@@ -105,7 +115,7 @@ void EstadoConexionWiFi() {
 void EstadoConfigMDns() {
   // Si se configura correctamente pasa al siguiente estado
   if (M2StartmDNS())
-    CambiarEstado(estadoEspera);
+    CambiarEstado(estadoPrueba);
   else
     CambiarEstado(estadoError);
 }
