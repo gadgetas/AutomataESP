@@ -40,6 +40,9 @@ const String numSerie = "000001";
 // de servicios.
 #include <ESP8266mDNS.h>        //2.5.2 - A5mDNS-SD
 /**************************************||**************************************/
+// Librería nativa para crear un servidor web de manera sencilla
+#include <ESP8266WebServer.h>
+/**************************************||**************************************/
 
 // Definimos puerto serial para Comunicación
 #define Serie Serial
@@ -74,9 +77,11 @@ void setup() {
 /******************************************************************************/
 /*************** ESTRUCTURA PRINCIPAL DE LA MÁQUINA DE ESTADOS ****************/
 /******************************************************************************/
-void loop() {  
-  MDNS.update();
+void loop() {
   LeerIndicaciones();
+  // Si ya se activo el servicio
+  if (Estado>estadoConfigMDns)
+    MDNS.update();
   switch (Estado) {
     case estadoPrueba:
       EstadoPrueba();

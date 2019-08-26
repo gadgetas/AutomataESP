@@ -42,7 +42,7 @@ void M2ConfmDNS() {
   // de configuración si existe en el archivo config.json
   String dominio = modelo + ESP.getChipId();
   dominio.toLowerCase();
-  // Establece el nombre del dominio
+  // Establece el nombre del dominio, máximo 64 bytes
   strlcpy(Datos.dominio, dominio.c_str(), 64);
   // Nombre del servicio ofrecido
 
@@ -71,6 +71,7 @@ boolean M2StartmDNS() {
   }
   // Announce esp tcp service on port 8080
   MDNS.addService("Gld-Unadin", "tcp", 3000);
+  MDNS.addService("http", "tcp", 80);
   return true;
 }
 
@@ -87,20 +88,20 @@ void M2mDNSInfo() {
 /******************************************************************************/
 /**************************************||**************************************/
 /******************************************************************************/
-void M2mDnsComando(){  
+void M2mDnsComando() {
   String nvoDominio = Serial.readStringUntil('\n');
   M2mDnsDominio(nvoDominio);
 }
 
 /******************************************************************************/
-/**************************************||**************************************/
+/************* ESTABLECE EL NOMBRE DEL HOST PARA EL DOMINIO LOCAL *************/
 /******************************************************************************/
 void M2mDnsDominio(String nuevoDominio) {
   // Verifica si tiene menos de 64 caracteres
   if (nuevoDominio.length() <= sizeof(Datos.dominio)) {
     /*Como copiar un string*/
     strlcpy(Datos.dominio,                  // <- destination
-            nuevoDominio.c_str(),  // <- source
+            nuevoDominio.c_str(),           // <- source
             sizeof(Datos.dominio));         // <- destination's capacity
     Serie.print(F("!Domain="));
     Serie.print(Datos.dominio);
@@ -109,4 +110,35 @@ void M2mDnsDominio(String nuevoDominio) {
   } else {
     log(F("(mDNS-SD)Dominio mayor a 64 caracteres"), logError);
   }
+}
+
+/******************************************************************************/
+/************ DEVUELVE EL DOMINIO DE LOS HOSTS DEL SERVICIO BUSCADO ***********/
+/******************************************************************************/
+String M2mDnsDescubrirServicio(String nombre, String tipo) {
+  log(F("(mDNS-SD)Buscando servicios: "), nombre, logNoticia);
+  // Buscar servicios en dispositivos, excepto
+  int n = MDNS.queryService(nombre, tipo);
+  if (n == 0) {
+    log(F("(mDNS-SD)No se encuentran servicios "), nombre, logError);
+    return "";
+  }
+  String dispositivos = MDNS.hostname(0);
+  for (int i = 0; i < n; ++i) {
+    // Print details for each service found
+    /*Serial.print(i + 1);
+    Serial.print(": ");
+    Serial.print(MDNS.hostname(i));
+    Serial.print(" (");
+    Serial.print(MDNS.IP(i));
+    Serial.print(":");
+    Serial.print(MDNS.port(i));
+    Serial.println(")");*/
+    if (i > 0) {
+      dispositivos += ",";
+      dispositivos += MDNS.hostname(i);
+    }
+  }
+  log(F("(mDNS-SD)Dominio(s) encontrado(s) "), dispositivos, logNoticia);
+  return dispositivos;
 }

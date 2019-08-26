@@ -33,11 +33,33 @@ void CambiarEstado(int sigEstado) {
 /*****************************************************************************/
 /*****************************************************************************/
 void EstadoPrueba() {
-  // Espera 5 segundos
-  if (millis() - tiempoAnt > 5000) {
-    tiempoAnt = millis();
+  if (M3StartWebServer())
     CambiarEstado(estadoEspera);
-  }
+  else
+    CambiarEstado(estadoError);
+  /*
+    // Espera 5 segundos
+    if (millis() - tiempoAnt > 10000) {
+    tiempoAnt = millis();
+
+    // Buscamos los dispositivos con el servicio
+    // String servidores=M2mDnsDescubrirServicio("Gld-Unicon", "tcp");
+
+    // Obtenemos el primero de ellos
+    /*int pos=servidores.indexOf(",");
+    if(pos==-1){ // Solo es uno
+
+    }
+    IPAddress ip;
+    if (!WiFi.hostByName("AugusGamer.local", ip)) { // Get the IP address of the NTP server
+      Serial.println("DNS lookup failed. Rebooting.");
+    }
+    else {
+      String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
+      Serial.print("IP resuelta por hostByName ");
+      Serie.println(ipStr);
+    }
+    }*/
 }
 
 /*****************************************************************************/
@@ -59,6 +81,7 @@ void EstadoConfiguracion() {
   A2ConfLog();
   M1ConfWiFiManager();
   M2ConfmDNS();
+  M3ConfWebServer();
   // Al último carga la configuración guardada de todos los módulos
   A3Config();
   CambiarEstado(estadoConexionWiFi);
@@ -68,12 +91,13 @@ void EstadoConfiguracion() {
 /*****************************************************************************/
 /*****************************************************************************/
 void EstadoEspera() {
+  webServer.handleClient();
   digitalWrite(LED_BUILTIN, HIGH);
   delay(200);
   digitalWrite(LED_BUILTIN, LOW);
   delay(200);
 
-  if (millis() - tSegAnt > 5000) {
+  if (millis() - tSegAnt > 30000) {
     segundos++;
     log(F("(EdoEspera)."), logInfo);
     tSegAnt = millis();
@@ -105,7 +129,7 @@ void EstadoConexionWiFi() {
 void EstadoConfigMDns() {
   // Si se configura correctamente pasa al siguiente estado
   if (M2StartmDNS())
-    CambiarEstado(estadoEspera);
+    CambiarEstado(estadoPrueba);
   else
     CambiarEstado(estadoError);
 }

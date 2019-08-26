@@ -3,7 +3,9 @@
 /******************************************************************************/
 struct DatosAutomataESP {
   //******************** Variables de propiedades generales *******************/
-  unsigned long tiempoError;  //
+  unsigned long tiempoError;  //  
+  char IpServerTo[64];        // IP del servidor al que se conecta
+  char DomainServerTo[64];    // Nombre de dominio del servidor que se conecta
   //********************************** A2Log **********************************/
   int verbosidad;             // Nivel de verbosidad  
   //********************************* M2mDNS **********************************/
@@ -37,7 +39,7 @@ void A1ConfGeneral() {
 void A1Informacion() {  
   //TODO: Esperar un tiempo antes de enviar mensajes
   Serial.println("");
-  Serial.print(F("!Modelo:"));
+  Serial.print(F("!Model:"));
   Serial.println(modelo);
   Serial.print(F("!Firmware:"));
   Serial.println(firmware);
@@ -51,6 +53,8 @@ void A1Informacion() {
   Serial.println(ESP.getCpuFreqMHz());
   Serial.print(F("!SketchSize:"));
   Serial.println(ESP.getSketchSize());
+  Serial.print(F("!HeapFree:"));
+  Serial.println(ESP.getFreeHeap());
 }
 
 /******************************************************************************/
