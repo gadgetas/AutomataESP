@@ -42,7 +42,7 @@ void M2ConfmDNS() {
   // de configuración si existe en el archivo config.json
   String dominio = modelo + ESP.getChipId();
   dominio.toLowerCase();
-  // Establece el nombre del dominio
+  // Establece el nombre del dominio, máximo 64 bytes
   strlcpy(Datos.dominio, dominio.c_str(), 64);
   // Nombre del servicio ofrecido
 
@@ -113,19 +113,32 @@ void M2mDnsDominio(String nuevoDominio) {
 }
 
 /******************************************************************************/
-/********** DEVUELVE EL DOMINIO DEL PRIMER HOST DEL SERVICIO BUSCADO **********/
+/************ DEVUELVE EL DOMINIO DE LOS HOSTS DEL SERVICIO BUSCADO ***********/
 /******************************************************************************/
-String M2mDnsIpServidor(String nombre, String tipo) {
+String M2mDnsDescubrirServicio(String nombre, String tipo) {
   log(F("(mDNS-SD)Buscando servicios: "), nombre, logNoticia);
+  // Buscar servicios en dispositivos, excepto
   int n = MDNS.queryService(nombre, tipo);
   if (n == 0) {
     log(F("(mDNS-SD)No se encuentran servicios "), nombre, logError);
-    return "127.0.0.1";
-  } else {
-    if (n > 1)
-      log(F("(mDNS-SD)Servicios encontrados: "), n, logInfo);
-
-    log(F("(mDNS-SD)Dominio encontrado "), MDNS.hostname(0), logNoticia);
-    return MDNS.hostname(0);
+    return "";
   }
+  String dispositivos = MDNS.hostname(0);
+  for (int i = 0; i < n; ++i) {
+    // Print details for each service found
+    /*Serial.print(i + 1);
+    Serial.print(": ");
+    Serial.print(MDNS.hostname(i));
+    Serial.print(" (");
+    Serial.print(MDNS.IP(i));
+    Serial.print(":");
+    Serial.print(MDNS.port(i));
+    Serial.println(")");*/
+    if (i > 0) {
+      dispositivos += ",";
+      dispositivos += MDNS.hostname(i);
+    }
+  }
+  log(F("(mDNS-SD)Dominio(s) encontrado(s) "), dispositivos, logNoticia);
+  return dispositivos;
 }

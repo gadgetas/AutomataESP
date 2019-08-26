@@ -33,11 +33,23 @@ void CambiarEstado(int sigEstado) {
 /*****************************************************************************/
 /*****************************************************************************/
 void EstadoPrueba() {
-  // Espera 5 segundos
-  if (millis() - tiempoAnt > 10000) {
+  if (M3StartWebServer())
+    CambiarEstado(estadoEspera);
+  else
+    CambiarEstado(estadoError);
+  /*
+    // Espera 5 segundos
+    if (millis() - tiempoAnt > 10000) {
     tiempoAnt = millis();
-    M2mDnsIpServidor("Gld-Unicon", "tcp");
-    //Serie.println(WiFi.hostByName("AugusGamer.local"));
+
+    // Buscamos los dispositivos con el servicio
+    // String servidores=M2mDnsDescubrirServicio("Gld-Unicon", "tcp");
+
+    // Obtenemos el primero de ellos
+    /*int pos=servidores.indexOf(",");
+    if(pos==-1){ // Solo es uno
+
+    }
     IPAddress ip;
     if (!WiFi.hostByName("AugusGamer.local", ip)) { // Get the IP address of the NTP server
       Serial.println("DNS lookup failed. Rebooting.");
@@ -47,7 +59,7 @@ void EstadoPrueba() {
       Serial.print("IP resuelta por hostByName ");
       Serie.println(ipStr);
     }
-  }
+    }*/
 }
 
 /*****************************************************************************/
@@ -69,6 +81,7 @@ void EstadoConfiguracion() {
   A2ConfLog();
   M1ConfWiFiManager();
   M2ConfmDNS();
+  M3ConfWebServer();
   // Al último carga la configuración guardada de todos los módulos
   A3Config();
   CambiarEstado(estadoConexionWiFi);
@@ -78,12 +91,13 @@ void EstadoConfiguracion() {
 /*****************************************************************************/
 /*****************************************************************************/
 void EstadoEspera() {
+  webServer.handleClient();
   digitalWrite(LED_BUILTIN, HIGH);
   delay(200);
   digitalWrite(LED_BUILTIN, LOW);
   delay(200);
 
-  if (millis() - tSegAnt > 5000) {
+  if (millis() - tSegAnt > 30000) {
     segundos++;
     log(F("(EdoEspera)."), logInfo);
     tSegAnt = millis();
