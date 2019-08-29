@@ -31,18 +31,32 @@ File fsUploadFile;
 /******************************************************************************/
 void M3ConfWebServer() {
   // Configuramos los datos de nuestra red WiFi
-  log(F("(WebServer)Configurando"), logInfo);
+  log(F("(WebServer)Configurando"), logNoticia);
+
+  webServer.on("/", HTTP_GET, []() {
+    //Verificamos si tiene permiso
+
+    //Envía el archivo
+    if (!M3LeerArchivoWeb("/web/dash.html"))
+      webServer.send(404, "text/plain", "FileNotFound");
+  });
+
 
   /*Otra forma de configurar rutas Existen HTTP_PUT, HTTP_DELETE, HTTP_POST
      webServer.on("/inline", HTTP_GET, []() {
     webServer.send(200, "text/plain", "this works as well");
     });*/
 
+  log(F("(WebServer)Agregando rutas estaticas"), logInfo);
+  webServer.serveStatic("/js", SPIFFS, "/web/js", "max-age=86400");
+  webServer.serveStatic("/css", SPIFFS, "/web/css", "max-age=86400");
+  webServer.serveStatic("/img", SPIFFS, "/web/img", "max-age=86400");
+
   // Configuración de rutas y métodos por defecto
   // Cuando no existe una ruta definida,lo busca en el sistema de archivos
   webServer.onNotFound([]() {
     // Si no lo encuentra en la memoria flash, envía un error 404
-    if (!M3LeerArchivoWeb("/public" + webServer.uri())) {
+    if (!M3LeerArchivoWeb("/web" + webServer.uri())) {
       M3RecursoNoEncontrado();
     }
   });
@@ -108,7 +122,7 @@ void M3SubirArchivoWeb() {
       filename = "/" + filename;
     }
     //Se guardan por defecto en public
-    filename="/public"+filename;
+    filename = "/public" + filename;
     log(F("(WebServer)Subiendo archivo al servidor"), filename, logInfo);
     // El nombre del archivo no debe superar 31 caracteres
     // if(filename.length()) TODO

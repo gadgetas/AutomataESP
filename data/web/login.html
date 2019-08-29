@@ -27,21 +27,31 @@
     <!-- Estilos personalizados para esta página -->
     <link href="/css/login.css" rel="stylesheet">
   </head>
-  <body class="text-center">
+  <body>
     <form class="form-signin">
-  <img class="mb-4" src="/img/logo.jpg" alt="" width="72" height="72">
-  <h1 class="h3 mb-3 font-weight-normal">Inicio de sesión</h1>
-  <label for="inputEmail" class="sr-only">Usuario</label>
-  <input type="email" id="inputEmail" class="form-control" placeholder="usuario de unadin" required autofocus>
-  <label for="inputPassword" class="sr-only">Contraseña</label>
-  <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+  <div class="text-center mb-4">
+    <img class="mb-4" src="/img/logo.jpg" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">Inicio de sesión</h1>
+    <p>Ingresa con el usuario y clave por defecto admin, admin</p>
+  </div>
+
+  <div class="form-label-group">
+    <input type="text" id="inputUser" class="form-control" placeholder="Usuario" required autofocus>
+    <label for="inputUser">Usuario</label>
+  </div>
+
+  <div class="form-label-group">
+    <input type="password" id="inputPassword" class="form-control" placeholder="Contraseña" required>
+    <label for="inputPassword">Contraseña</label>
+  </div>
+
   <div class="checkbox mb-3">
     <label>
-      <input type="checkbox" value="remember-me"> Mantener mi sesión
+      <input type="checkbox" value="remember-me"> Mantener la sesión
     </label>
   </div>
   <button class="btn btn-lg btn-primary btn-block" type="submit">Ingresar</button>
-  <p class="mt-5 mb-3 text-muted">Gadgetas&copy; 2019</p>
+  <p class="mt-5 mb-3 text-muted text-center">Gadgetas &copy; 2019</p>
 </form>
 </body>
 </html>
