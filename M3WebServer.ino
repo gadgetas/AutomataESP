@@ -25,6 +25,8 @@
 /******************************************************************************/
 ESP8266WebServer webServer(80);
 File fsUploadFile;
+const char* www_username = "admin";
+const char* www_password = "admin";
 
 /******************************************************************************/
 /*************** CONFIGURACIÓN INICIAL DE TERMINALES Y VARIABLES **************/
@@ -33,19 +35,21 @@ void M3ConfWebServer() {
   // Configuramos los datos de nuestra red WiFi
   log(F("(WebServer)Configurando"), logNoticia);
 
-  webServer.on("/", HTTP_GET, []() {
-    //Verificamos si tiene permiso
-
-    //Envía el archivo
+  // Rutas con autorización básica
+  webServer.on("/", []() {
+    if (!M3UsuarioAutenticado())
+      return;
     if (!M3LeerArchivoWeb("/web/dash.html"))
-      webServer.send(404, "text/plain", "FileNotFound");
+      M3RecursoNoEncontrado();
   });
+
+  webServer.on("/login", M3Login);
 
   webServer.on("/js/bootstrap.bundle.min.js.map", HTTP_GET, []() {
     if (!M3LeerArchivoWeb("/web/js/bootstrap.map"))
       webServer.send(404, "text/plain", "FileNotFound");
   });
-  
+
   webServer.on("/css/bootstrap.min.css.map", HTTP_GET, []() {
     if (!M3LeerArchivoWeb("/web/css/bootstrap.map"))
       webServer.send(404, "text/plain", "FileNotFound");
@@ -64,6 +68,12 @@ void M3ConfWebServer() {
       M3RecursoNoEncontrado();
     }
   });
+
+  // Lista de cabecera a ser registrada
+  const char * headerkeys[] = {"User-Agent", "Cookie"} ;
+  size_t headerkeyssize = sizeof(headerkeys) / sizeof(char*);
+  // ask server to track these headers
+  webServer.collectHeaders(headerkeys, headerkeyssize);
 }
 
 /******************************************************************************/
@@ -228,4 +238,64 @@ String getContentType(String filename) {
     return "application/x-gzip";
   }
   return "text/plain";
+}
+
+/******************************************************************************/
+/**************************************||**************************************/
+/******************************************************************************/
+bool M3UsuarioAutenticado() {
+  log(F("(WebServer)Verificando si usuario esta autenticado"), logInfo);
+  if (webServer.hasHeader("Cookie")) {
+    String cookie = webServer.header("Cookie");
+    log(F("(WebServer)Cookie encontrada:"), cookie, logInfo);
+    if (cookie.indexOf("ESPSESSIONID=1") != -1) {
+      log(F("(WebServer)Usuario Autenticado"), logInfo);
+      return true;
+    }
+  }
+  log(F("(WebServer)Fallo autenticacion"), logError);
+  webServer.sendHeader("Location", "/login.html");
+  webServer.sendHeader("Cache-Control", "no-cache");
+  webServer.send(301);
+  return false;
+}
+
+
+//login page, also called for disconnect
+void M3Login() {
+  String msg;
+  if (webServer.hasHeader("Cookie")) {
+    Serial.print("Found cookie: ");
+    String cookie = webServer.header("Cookie");
+    Serial.println(cookie);
+  }
+  if (webServer.hasArg("DISCONNECT")) {
+    Serial.println("Disconnection");
+    webServer.sendHeader("Location", "/login");
+    webServer.sendHeader("Cache-Control", "no-cache");
+    webServer.sendHeader("Set-Cookie", "ESPSESSIONID=0");
+    webServer.send(301);
+    return;
+  }
+  if (webServer.hasArg("usuario") && webServer.hasArg("clave")) {
+    if (webServer.arg("usuario") == "admin" &&  webServer.arg("clave") == "admin") {
+      webServer.sendHeader("Location", "/");
+      webServer.sendHeader("Cache-Control", "no-cache");
+      webServer.sendHeader("Set-Cookie", "ESPSESSIONID=1");
+      webServer.send(301);
+      Serial.println("Log in Successful");
+      return;
+    }
+    msg = "Wrong username/password! try again.";
+    Serial.println("Log in Failed");
+  }
+  if (!M3LeerArchivoWeb("/web/login.html")) {
+    // Si no lo encuentra, construimos la página
+    String content = "<html><body><form action='/login' method='POST'>To log in, please use : admin/admin<br>";
+    content += "User:<input type='text' name='USERNAME' placeholder='user name'><br>";
+    content += "Password:<input type='password' name='PASSWORD' placeholder='password'><br>";
+    content += "<input type='submit' name='SUBMIT' value='Submit'></form>" + msg + "<br>";
+    content += "You also can go <a href='/inline'>here</a></body></html>";
+    webServer.send(200, "text/html", content);
+  }
 }
