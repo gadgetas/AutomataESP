@@ -77,8 +77,9 @@ void EstadoError() {
 /******************************************************************************/
 /******************************************************************************/
 void EstadoConfiguracion() {
-  A1ConfGeneral();
-  A2ConfLog();
+  A1ConfGeneral();          //Muestra los valores predeterminados
+  A5ConfSpiffs();           //Monta el sistema de archivos
+  A2ConfLog();              //Establece valores personalizados
   M1ConfWiFiManager();
   M2ConfmDNS();
   M3ConfWebServer();

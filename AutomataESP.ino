@@ -41,12 +41,13 @@ const String numSerie = "000001";
 #include <ESP8266mDNS.h>        //2.5.2 - A5mDNS-SD
 /**************************************||**************************************/
 // Librería nativa para crear un servidor web de manera sencilla
+// https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WebServer
 #include <ESP8266WebServer.h>
 /**************************************||**************************************/
 
 // Definimos puerto serial para Comunicación
 #define Serie Serial
-#define SerialLog_bps 115200
+#define Serial_bps 115200
 
 // Definimos puerto serial para LOG
 #define SerialLog Serial
@@ -68,8 +69,9 @@ int Estado; // Variable global que contiene el estado actual
 /*************************** INICIALIZACIÓN GENERAL ***************************/
 /******************************************************************************/
 void setup() {
+  Serie.begin(Serial_bps);  
   /****SI ES DIFERENTE EL PUERTO DEL LOG***/
-  SerialLog.begin(SerialLog_bps);
+  /* Serial_bps.begin(SerialLog_bps);*/
   A1Informacion();
   CambiarEstado(estadoConfiguracion);
 }

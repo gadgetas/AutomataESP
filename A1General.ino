@@ -69,6 +69,7 @@ void InfoGeneral() {
   A2LogInfo();
   M1WiFiManagerInfo();
   M2mDNSInfo();
+  A5InfoSpiifs();
   Serie.println(F("------INFO------"));
 }
 /**************************************||**************************************/

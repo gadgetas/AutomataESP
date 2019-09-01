@@ -12,15 +12,6 @@ const int capacidadDoc = 1024;
 /******************************************************************************/
 void A3Config() {
   log(F("(Config)Configurando"), logInfo);
-  // Monta el sistema de archivos
-  if (!SPIFFS.begin()) {
-    log(F("(Config)Fallo en montar la unidad"), logError);
-    CambiarEstado(estadoError);
-    return;
-  }
-  else
-    log(F("(Config)Memoria flash montada"), logNoticia);
-
   if (!LeerConfig())
     log(F("(Config)No cargo configuracion"), logError);
 }
