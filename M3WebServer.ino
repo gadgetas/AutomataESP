@@ -41,11 +41,15 @@ void M3ConfWebServer() {
       webServer.send(404, "text/plain", "FileNotFound");
   });
 
-
-  /*Otra forma de configurar rutas Existen HTTP_PUT, HTTP_DELETE, HTTP_POST
-     webServer.on("/inline", HTTP_GET, []() {
-    webServer.send(200, "text/plain", "this works as well");
-    });*/
+  webServer.on("/js/bootstrap.bundle.min.js.map", HTTP_GET, []() {
+    if (!M3LeerArchivoWeb("/web/js/bootstrap.map"))
+      webServer.send(404, "text/plain", "FileNotFound");
+  });
+  
+  webServer.on("/css/bootstrap.min.css.map", HTTP_GET, []() {
+    if (!M3LeerArchivoWeb("/web/css/bootstrap.map"))
+      webServer.send(404, "text/plain", "FileNotFound");
+  });
 
   log(F("(WebServer)Agregando rutas estaticas"), logInfo);
   webServer.serveStatic("/js", SPIFFS, "/web/js", "max-age=86400");
