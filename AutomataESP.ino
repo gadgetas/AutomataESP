@@ -1,19 +1,19 @@
 /******************************************************************************/
-/**************************** NOMBRE DEL PROYECTO *****************************/
+/********************** NOMBRE DEL PROYECTO GENERICO **************************/
 /******************************************************************************/
 /** Aquí redacta la descripción del programa, esta debe ser concisa, un      **/
 /** resumen general que explique el alcance y finalidad del programa         **/
 /**   Placa Hardware:      ESP8266 Generico || Para que hardware se programa **/
-/**   Versión IDE Arduino: 1.8.9            || Versión con que se desarrolla **/
+/**   Versión IDE Arduino: 2.3.2            || Versión con que se desarrolla **/
 /******************************************************************************/
-/** Version 0.1.190729 || Esta es la versión actual, se usa la semántica para
+/** Version 0.0.240705 || Esta es la versión actual, se usa la semántica para
 /**                       los dos primero números y en el último la fecha AAMMDD
 /**
 /** Última revisión:   || Ultima revisión o actualización, solo la última
-/** 19/03/06 Augusto - Agregan leds de monitoreo
+/** 24/07/05 Augusto - Se ajusta el código a la nueva versión
 /******************************************************************************/
 const String modelo = "GLBOX";
-const String firmware = "0.1.100729";
+const String firmware = "0.1.240705";
 const String numSerie = "000001";
 
 /******************************************************************************/
@@ -23,22 +23,22 @@ const String numSerie = "000001";
 /** versiones de cada una ordenadas por prioridad y utilización              **/
 /**************************************||**************************************/
 // Librería con la funcionalidad principal de manejo del WiFi
-//WiFi::https://arduino-esp8266.readthedocs.io/en/2.5.2/esp8266wifi/readme.html
-#include <ESP8266WiFi.h>        //2.5.2 - M1WiFiManager
-#include <WiFiManager.h>        //0.14.0- M1WiFiManager
+//WiFi::https://arduino-esp8266.readthedocs.io/en/3.1.2/esp8266wifi/readme.html
+#include <ESP8266WiFi.h>        //3.1.2 - M1WiFiManager
+#include <WiFiManager.h>        //2.0.17- M1WiFiManager
 /**************************************||**************************************/
 // Codificador JSON :: https://github.com/bblanchon/ArduinoJson
-#include <ArduinoJson.h>        //6.11.3 - A1General
+#include <ArduinoJson.h>        //7.1.0 - A1General
 /***************************** Sistema de Archivos ****************************/
 // Librería nativa SPIFFS para el manejo de archivos de la memoria flash
 // *Importante checar sus limitaciones
-// https://arduino-esp8266.readthedocs.io/en/2.5.2/filesystem.html
-#include "FS.h"                 //2.5.2 - A3Config
+// https://arduino-esp8266.readthedocs.io/en/3.1.2/filesystem.html
+#include "LittleFS.h"                 //3.1.2 - A3Config
 /**************************************||**************************************/
 // Librería nativa que permite asignar un dominio local al ESP sin necesidad de 
 // servidor DNS, usa el protocolo mDNS. Responde a consultas de descubrimiento
 // de servicios.
-#include <ESP8266mDNS.h>        //2.5.2 - A5mDNS-SD
+#include <ESP8266mDNS.h>              //3.1.2 - A5mDNS-SD
 /**************************************||**************************************/
 // Librería nativa para crear un servidor web de manera sencilla
 // https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WebServer

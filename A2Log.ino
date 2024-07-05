@@ -4,7 +4,7 @@
 /** Funcionalidad para depuracion de código auxiliar                         **/
 /** en la generación de mensajes considerando grados                         **/
 /** de severidad, de acuerdo a RFC5424                                       **/
-/**  0     Emergencia: Luzi no es funcional system is unusable               **/
+/**  0     Emergencia: ESP no es funcional system is unusable                **/
 /**  1     Alerta: Se deben tomar acciones inmediatas                        **/
 /**  2     Critico: Surgen condiciones de funcionamiento critico             **/
 /**  3     Error: Surgen condiciones de errores                              **/
