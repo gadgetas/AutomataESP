@@ -1,21 +1,21 @@
 /******************************************************************************/
-/******************** MÓDULO DE SISTEMA DE ARCHIVOS SPIFFS ********************/
+/******************** MÓDULO DE SISTEMA DE ARCHIVOS LittleFS ********************/
 /******************************************************************************/
 void A5ConfSpiffs(){
-  log(F("(SPIFFS)Configurando"), logInfo);
+  log(F("(LittleFS)Configurando"), logInfo);
   // Monta el sistema de archivos
-  if (!SPIFFS.begin()) {
-    log(F("(SPIFFS)Error montando el sistema de archivos"), logError);
+  if (!LittleFS.begin()) {
+    log(F("(LittleFS)Error montando el sistema de archivos"), logError);
     ESP.reset();
     return;
   }
   else
-    log(F("(SPIFFS)Se ha Montado el sistema de archivos flash"), logNoticia);
+    log(F("(LittleFS)Se ha Montado el sistema de archivos flash"), logNoticia);
 }
 
 void A5InfoSpiifs() {
   Serie.println(F("------SISTEMA ARCHIVOS------"));
-  Dir dir = SPIFFS.openDir("/");
+  Dir dir = LittleFS.openDir("/");
   while (dir.next()) {
     String fileName = dir.fileName();
     size_t fileSize = dir.fileSize();

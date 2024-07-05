@@ -64,7 +64,7 @@ void A1Informacion() {
 void InfoGeneral() {
   Serie.println(F("------INFO------"));
   A1Informacion();
-  Serie.print(F("!EdoActual="));
+  Serie.print(F("!EdoActual=")?);
   Serie.println(Estado);
   A2LogInfo();
   M1WiFiManagerInfo();

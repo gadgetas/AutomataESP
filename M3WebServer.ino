@@ -56,9 +56,9 @@ void M3ConfWebServer() {
   });
 
   log(F("(WebServer)Agregando rutas estaticas"), logInfo);
-  webServer.serveStatic("/js", SPIFFS, "/web/js", "max-age=86400");
-  webServer.serveStatic("/css", SPIFFS, "/web/css", "max-age=86400");
-  webServer.serveStatic("/img", SPIFFS, "/web/img", "max-age=86400");
+  webServer.serveStatic("/js", LittleFS, "/web/js", "max-age=86400");
+  webServer.serveStatic("/css", LittleFS, "/web/css", "max-age=86400");
+  webServer.serveStatic("/img", LittleFS, "/web/img", "max-age=86400");
 
   // Configuración de rutas y métodos por defecto
   // Cuando no existe una ruta definida,lo busca en el sistema de archivos
@@ -88,6 +88,7 @@ bool M3StartWebServer() {
   }
   // Se inicia el servicio
   webServer.begin();
+  return true;
 }
 
 /******************************************************************************/
@@ -116,11 +117,11 @@ bool M3LeerArchivoWeb(String path) {
   }
   String contentType = getContentType(path);
   String pathWithGz = path + ".gz";
-  if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)) {
-    if (SPIFFS.exists(pathWithGz)) {
+  if (LittleFS.exists(pathWithGz) || LittleFS.exists(path)) {
+    if (LittleFS.exists(pathWithGz)) {
       path += ".gz";
     }
-    File file = SPIFFS.open(path, "r");
+    File file = LittleFS.open(path, "r");
     webServer.streamFile(file, contentType);
     file.close();
     return true;
@@ -140,7 +141,7 @@ void M3SubirArchivoWeb() {
     log(F("(WebServer)Subiendo archivo al servidor"), filename, logInfo);
     // El nombre del archivo no debe superar 31 caracteres
     // if(filename.length()) TODO
-    fsUploadFile = SPIFFS.open(filename, "w");
+    fsUploadFile = LittleFS.open(filename, "w");
     filename = String();
   } else if (upload.status == UPLOAD_FILE_WRITE) {
     //DBG_OUTPUT_PORT.print("handleFileUpload Data: "); DBG_OUTPUT_PORT.println(upload.currentSize);
@@ -164,10 +165,10 @@ void M3BorrarArchivoWeb() {
   if (path == "/") {
     return webServer.send(500, "text/plain", "BAD PATH");
   }
-  if (!SPIFFS.exists(path)) {
+  if (!LittleFS.exists(path)) {
     return webServer.send(404, "text/plain", "FileNotFound");
   }
-  SPIFFS.remove(path);
+  LittleFS.remove(path);
   webServer.send(200, "text/plain", "");
   path = String();
 }
@@ -181,10 +182,10 @@ void M3CrearArchivoWeb() {
   if (path == "/") {
     return webServer.send(500, "text/plain", "BAD PATH");
   }
-  if (SPIFFS.exists(path)) {
+  if (LittleFS.exists(path)) {
     return webServer.send(500, "text/plain", "FILE EXISTS");
   }
-  File file = SPIFFS.open(path, "w");
+  File file = LittleFS.open(path, "w");
   if (file) {
     file.close();
   } else {
